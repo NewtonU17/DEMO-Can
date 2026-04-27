@@ -4,7 +4,7 @@ import numpy as np
 import evaluacion
 
 
-st.title('Pronóstico de Ventas por Factura')
+st.title('Demo Candidates')
 #['tyc', 'gaia', 'hyg', 'hip', 'hd', 'hr', 'gl', 'flam', 'ra','dec',  'mag', 'ci', 'rv', "con"]
 col1, col2= st.columns([1,1])
 
