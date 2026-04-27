@@ -1,142 +1,143 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-import evaluacion
+import json
+
+st.set_page_config(page_title="AI Engineer Evaluation Form", layout="wide")
+
+st.title("🧩 AI Engineer Candidate Evaluation")
+
+st.markdown("Select the appropriate score (1–5) for each category and optionally provide evidence.")
+
+# ---------- Helper ----------
+def score_select(label):
+    return st.selectbox(
+        label,
+        options=[
+            "1 - None / Very Weak",
+            "2 - Basic",
+            "3 - Intermediate",
+            "4 - Strong",
+            "5 - Expert"
+        ]
+    )
+
+def extract_score(selection):
+    return int(selection.split(" - ")[0])
 
 
-st.title('Demo Candidates')
-#['tyc', 'gaia', 'hyg', 'hip', 'hd', 'hr', 'gl', 'flam', 'ra','dec',  'mag', 'ci', 'rv', "con"]
-col1, col2= st.columns([1,1])
+# ---------- TECHNICAL ----------
+st.header("🧠 Technical Skills")
 
-with col1:
-    catalog = st.multiselect(
-    "¿Qué Producto/s desea predecir?",
-    ('10-20-30-1-1 BULTO X 50 KGS', '13-26-6 BULTO X 50 KGS',
-       '15-15-15 BULTO X 50 KGS', '31-8-8-2-3 (POTREROS) BULTO X 50 KGS',
-       'ARPON BOTELLA X 1 LTR', 'BURIL BOL  X 100 GR',
-       'CITROEMULSION ENVASE X 1 LTS',
-       'FOSFATO DIAMONICO (DAP) BULTO X 50 KGS', 'GRUYA BOTELLA X 1 LTR',
-       'IMPERIUS BOTELLA X 1 LTR', 'NOVAPLANT CA-B-ZN X LITRO',
-       'PREDOSTAR BOL X 300 GR - GLY', 'PRODUCCION 17-6-18-2 BTO X 50 KG',
-       'SUPERPRODUCCION 25-4-24 BTO X 50 KG', 'UREA GRANULADA X 50 KILOS',
-       'otro'),
-)
-    prods = np.zeros(16)
-    catag = np.array(['10-20-30-1-1 BULTO X 50 KGS', '13-26-6 BULTO X 50 KGS',
-       '15-15-15 BULTO X 50 KGS', '31-8-8-2-3 (POTREROS) BULTO X 50 KGS',
-       'ARPON BOTELLA X 1 LTR', 'BURIL BOL  X 100 GR',
-       'CITROEMULSION ENVASE X 1 LTS',
-       'FOSFATO DIAMONICO (DAP) BULTO X 50 KGS', 'GRUYA BOTELLA X 1 LTR',
-       'IMPERIUS BOTELLA X 1 LTR', 'NOVAPLANT CA-B-ZN X LITRO',
-       'PREDOSTAR BOL X 300 GR - GLY', 'PRODUCCION 17-6-18-2 BTO X 50 KG',
-       'SUPERPRODUCCION 25-4-24 BTO X 50 KG', 'UREA GRANULADA X 50 KILOS',
-       'otro'])
-    for cons in catalog:
-        num = np.where(catag == cons)
-        prods[num] = 1
-        
-    catalogcl = st.multiselect(
-    "¿Qué Cliente/s desea predecir?",
-    ('DISTRIBUIDORA SURTIVEL S.A.S', 'RENDON LUZ AIDE', 'AGROBOLIVAR SG SAS',
-       'LA CASA DEL AGRO MCU SAS', 'AGROTIENDA TONE SAS',
-       'ZULUAGA VELASQUEZ LUIS EDUARDO', 'COOPERATIVA AGROMULTIACTIVA SAN BAR',
-       'CASTAÑEDA SANCHEZ GLORIA PATRICIA', 'VALLEJO TOBON JULIO CESAR',
-       'BODEGA CAMPESINA SAS', 'AGROEQUIPOS EL SEMBRADOR SAS ZOMAC',
-       'REGIONAGRO SAS', 'ALMACENES AGROSUROESTE S.A.S', 'general',
-       'ZULUAGA HOYOS GERARDO DE JESUS', 'RODRIGUEZ GONZALEZ LUIS ALBERTO',
-       'AGROPECUARIA LUIS E RENDON B Y CIA', 'CANO DUQUE WILMAR HERNAN',
-       'AGROINSUMOS CON LOS MEJORES PRECIOS', 'YEPES BETANCURT RUBEN DARIO',
-       'PIEDRAHITA BEDOYA YOAN FELIPE', 'RUA MESA JHON JAIRO',
-       'DISTRIBUCIONES MUNDO AGRO ANTIOQUIA', 'ALMACEN AGRICOLA CAMPESINO SAS',
-       'ASO GANADEROS DEL ALTIPLANO NORTE D', 'ALMACENES CONSTRUAGRO SAS',
-       'RENDON FRANCISCO JAVIER', 'FED COLOMBIANA DE PRODUCTORES DE PA',
-       'AGROSANDER DON JORGE S.A.S', 'GIRALDO ARBELAEZ JOSE RAMON',
-       'AGROBOLIVAR FLOWERS SAS'),
-)
-    clients = np.zeros(31)
-    catagcl = np.array(['DISTRIBUIDORA SURTIVEL S.A.S', 'RENDON LUZ AIDE', 'AGROBOLIVAR SG SAS',
-       'LA CASA DEL AGRO MCU SAS', 'AGROTIENDA TONE SAS',
-       'ZULUAGA VELASQUEZ LUIS EDUARDO', 'COOPERATIVA AGROMULTIACTIVA SAN BAR',
-       'CASTAÑEDA SANCHEZ GLORIA PATRICIA', 'VALLEJO TOBON JULIO CESAR',
-       'BODEGA CAMPESINA SAS', 'AGROEQUIPOS EL SEMBRADOR SAS ZOMAC',
-       'REGIONAGRO SAS', 'ALMACENES AGROSUROESTE S.A.S', 'general',
-       'ZULUAGA HOYOS GERARDO DE JESUS', 'RODRIGUEZ GONZALEZ LUIS ALBERTO',
-       'AGROPECUARIA LUIS E RENDON B Y CIA', 'CANO DUQUE WILMAR HERNAN',
-       'AGROINSUMOS CON LOS MEJORES PRECIOS', 'YEPES BETANCURT RUBEN DARIO',
-       'PIEDRAHITA BEDOYA YOAN FELIPE', 'RUA MESA JHON JAIRO',
-       'DISTRIBUCIONES MUNDO AGRO ANTIOQUIA', 'ALMACEN AGRICOLA CAMPESINO SAS',
-       'ASO GANADEROS DEL ALTIPLANO NORTE D', 'ALMACENES CONSTRUAGRO SAS',
-       'RENDON FRANCISCO JAVIER', 'FED COLOMBIANA DE PRODUCTORES DE PA',
-       'AGROSANDER DON JORGE S.A.S', 'GIRALDO ARBELAEZ JOSE RAMON',
-       'AGROBOLIVAR FLOWERS SAS'])
-    for cons in catalogcl:
-        num = np.where(catagcl == cons)
-        clients[num] = 1
+ml_fund = score_select("ML Fundamentals")
+ml_fund_ev = st.text_area("Evidence (ML Fundamentals)")
 
-    catalogmark = st.multiselect(
-    "¿A qué marcas pertenecen los productos seleccionados?",
-    ('ALTRIA', 'ECOFERTIL', 'INTEROC', 'JARDINES SIERRA', 'KIMITEC',
-       'NUTRIMON', 'PROBELTE', 'STOLLER COLOMBIA',
-       'SUPERFERTILIZANTES'),
-)
-    marks = np.zeros(10)
-    catagmark = np.array(['ALTRIA', 'ECOFERTIL', 'INTEROC', 'JARDINES SIERRA', 'KIMITEC',
-       'NUTRIMON', 'PRECISAGRO', 'PROBELTE', 'STOLLER COLOMBIA',
-       'SUPERFERTILIZANTES'])
-    for cons in catalogmark:
-        num = np.where(catagmark == cons)
-        marks[num] = 1
-    
-    
-    catalogmats = st.multiselect(
-    "¿A qué grupos de materiales pertenecen los productos seleccionados?",
-    ('AGROQUIMICOS ESTRUCT', 'FERTILIZANTES ESTRUC', 'CORRECTIVOS ESTRUCTU'),
-)
-    mats = np.zeros(3)
-    catagmats = np.array(['AGROQUIMICOS ESTRUCT', 'FERTILIZANTES ESTRUC', 'CORRECTIVOS ESTRUCTU'])
-    for cons in catalogmats:
-        num = np.where(catagmats == cons)
-        mats[num] = 1
-    
-    catalogsect = st.multiselect(
-    "¿A qué sectores pertenecen los clientes seleccionados?",
-    ('P. RC NORTE LEJANO', 'P. RC AGRICOLA V.A', 'P. RC CÓRDOBA',
-       'RTC VALLE DE ABURRA', 'P. RC AGR.NORTE', 'RTC ORIENTE A', 'RTC SUR',
-       'P. RC AGR.ORIEN.A', 'RTC CORDOBA', 'P. RC AGR.ORIEN B', 'RTC URABA',
-       'RTC ORIENTE B', 'RTC NORTE', 'P. RC AGRICOLA B.CAU', 'P. RC URABA',
-       'P. RC AGR. SUROESTE'),
-)
-    sect = np.zeros(16)
-    catagsect = np.array(['P. RC NORTE LEJANO', 'P. RC AGRICOLA V.A', 'P. RC CÓRDOBA',
-       'RTC VALLE DE ABURRA', 'P. RC AGR.NORTE', 'RTC ORIENTE A', 'RTC SUR',
-       'P. RC AGR.ORIEN.A', 'RTC CORDOBA', 'P. RC AGR.ORIEN B', 'RTC URABA',
-       'RTC ORIENTE B', 'RTC NORTE', 'P. RC AGRICOLA B.CAU', 'P. RC URABA',
-       'P. RC AGR. SUROESTE'])
-    for cons in catalogsect:
-        num = np.where(catagsect == cons)
-        sect[num] = 1
-    
-    catalogofi = st.multiselect(
-    "¿Con qué oficina se asocian los sectores seleccionados?",
-    ('P. AGRICOLA ITAGUI', 'P. AGRICOLA STA ROSA'),
-)
-    ofi = np.zeros(2)
-    catagofi = np.array(['P. AGRICOLA ITAGUI', 'P. AGRICOLA STA ROSA'])
-    for cons in catalogofi:
-        num = np.where(catagofi == cons)
-        ofi[num] = 1
-    
-with col2:
-    day = st.number_input(f'Ingrese el día', min_value=0, max_value=31, value=10)
-    mes = st.number_input(f'Ingrese el mes', min_value=0, max_value=12, value=10)
-    year = st.number_input(f'Ingrese el año', min_value=2020, max_value=2028, value=2025)
-    precio = st.number_input(f'Ingrese el precio al que se vende una unidad', min_value=0, max_value=300000, value=100000)
-    peso = st.number_input(f'Ingrese el peso de una unidad', min_value=0, max_value=100, value=25)
-    lluvia = st.number_input(f'Ingrese los mm de precipitación del día', min_value=0, max_value=35, value=5)
-    TRM = st.number_input(f'Ingrese el valor promedio de la TRM para el día', min_value=0, max_value=6000, value=4200)
-    IPC = st.number_input(f'Ingrese el valor del IPP para el mes a predecir', min_value=0, max_value=400, value=288)
-values = np.concatenate(([year,mes,day,precio,peso,lluvia,TRM, IPC],clients,sect,ofi,mats,marks,prods))
-values = evaluacion.preparacion(values)
-dist = evaluacion.prediccion(values)[0]
-if dist < 0: dist = 0
-st.write(f"La venta introducida será de {round(dist)} unidades según el modelo")
+applied_ml = score_select("Applied ML / Modeling")
+applied_ml_ev = st.text_area("Evidence (Applied ML)")
+
+software_eng = score_select("Software Engineering")
+software_eng_ev = st.text_area("Evidence (Software Engineering)")
+
+mlops = score_select("Systems & MLOps")
+mlops_ev = st.text_area("Evidence (MLOps)")
+
+research = score_select("Research & Innovation (optional)")
+research_ev = st.text_area("Evidence (Research)")
+
+# ---------- BEHAVIORAL ----------
+st.header("🤝 Behavioral Skills")
+
+problem_solving = score_select("Problem Solving")
+problem_solving_ev = st.text_area("Evidence (Problem Solving)")
+
+communication = score_select("Communication")
+communication_ev = st.text_area("Evidence (Communication)")
+
+ownership = score_select("Ownership & Execution")
+ownership_ev = st.text_area("Evidence (Ownership)")
+
+collaboration = score_select("Collaboration")
+collaboration_ev = st.text_area("Evidence (Collaboration)")
+
+learning = score_select("Learning Agility")
+learning_ev = st.text_area("Evidence (Learning Agility)")
+
+# ---------- ENGLISH ----------
+st.header("🌍 Language")
+
+english = score_select("English Proficiency")
+english_ev = st.text_area("Evidence (English)")
+
+# ---------- SUBMIT ----------
+st.header("📊 Results")
+
+if st.button("Generate Evaluation"):
+
+    scores = {
+        "ML Fundamentals": {
+            "score": extract_score(ml_fund),
+            "evidence": ml_fund_ev
+        },
+        "Applied ML": {
+            "score": extract_score(applied_ml),
+            "evidence": applied_ml_ev
+        },
+        "Software Engineering": {
+            "score": extract_score(software_eng),
+            "evidence": software_eng_ev
+        },
+        "MLOps": {
+            "score": extract_score(mlops),
+            "evidence": mlops_ev
+        },
+        "Research": {
+            "score": extract_score(research),
+            "evidence": research_ev
+        },
+        "Problem Solving": {
+            "score": extract_score(problem_solving),
+            "evidence": problem_solving_ev
+        },
+        "Communication": {
+            "score": extract_score(communication),
+            "evidence": communication_ev
+        },
+        "Ownership": {
+            "score": extract_score(ownership),
+            "evidence": ownership_ev
+        },
+        "Collaboration": {
+            "score": extract_score(collaboration),
+            "evidence": collaboration_ev
+        },
+        "Learning Agility": {
+            "score": extract_score(learning),
+            "evidence": learning_ev
+        },
+        "English": {
+            "score": extract_score(english),
+            "evidence": english_ev
+        }
+    }
+
+    # Simple aggregates
+    technical_keys = ["ML Fundamentals", "Applied ML", "Software Engineering", "MLOps", "Research"]
+    behavioral_keys = ["Problem Solving", "Communication", "Ownership", "Collaboration", "Learning Agility"]
+
+    technical_avg = sum(scores[k]["score"] for k in technical_keys) / len(technical_keys)
+    behavioral_avg = sum(scores[k]["score"] for k in behavioral_keys) / len(behavioral_keys)
+
+    general_score = 0.6 * technical_avg + 0.4 * behavioral_avg
+
+    result = {
+        "scores": scores,
+        "aggregates": {
+            "technical_avg": round(technical_avg, 2),
+            "behavioral_avg": round(behavioral_avg, 2),
+            "general_score": round(general_score, 2)
+        }
+    }
+
+    st.subheader("📌 Summary Scores")
+    st.write(result["aggregates"])
+
+    st.subheader("📄 Full JSON Output")
+    st.json(result)
