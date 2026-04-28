@@ -20,7 +20,7 @@ def read_eval(pdfdir):
         
     client = OpenAI(
       base_url="https://openrouter.ai/api/v1",
-      api_key=secret,
+      
     )
     
     # First API call with reasoning
