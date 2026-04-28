@@ -7,7 +7,7 @@ import os
 
 
 def read_eval(pdfdir):
-    secret = os.environ.get("THAT_ONE")
+    OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
     pdf = pdfplumber.open(pdfdir)
     full_text = ""
     
@@ -20,7 +20,7 @@ def read_eval(pdfdir):
         
     client = OpenAI(
       base_url="https://openrouter.ai/api/v1",
-      
+      api_key= OPENAI_API_KEY
     )
     
     # First API call with reasoning
