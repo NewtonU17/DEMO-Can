@@ -1,6 +1,6 @@
 import streamlit as st
 import json
-from test LLM import read_eval
+from test_LLM import read_eval
 
 st.set_page_config(page_title="AI Engineer Evaluation Form", layout="wide")
 
@@ -27,6 +27,10 @@ def extract_score(selection):
 uploaded_files = st.file_uploader(
     "Upload CV", type=["pdf", "png"]
 )
+
+Res = read_eval(uploaded_files)
+st.subheader("Key_word Identification")
+st.writte(Res)
 for uploaded_file in uploaded_files:
     st.image(uploaded_file)
 # ---------- TECHNICAL ----------
