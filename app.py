@@ -29,8 +29,8 @@ uploaded_files = st.file_uploader(
 )
 
 
-for uploaded_file in uploaded_files:
-    st.image(uploaded_file)
+"""for uploaded_file in uploaded_files:
+    st.image(uploaded_file)"""
 
 if st.button("Scan CV"):
     Res = read_eval(uploaded_files)
