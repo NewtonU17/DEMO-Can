@@ -1,8 +1,13 @@
 from openai import OpenAI
 import pdfplumber  # PyMuPDF
 #pdf = pdfplumber.open(r"C:\Users\isaac\OneDrive\Documentos\Futura Demo\Demo\Futura_Talent_Growth_Plan_1year.pdf")
+import os
+
+
+
 
 def read_eval(pdfdir):
+    secret = os.environ.get("THAT_ONE")
     pdf = pdfplumber.open(pdfdir)
     full_text = ""
     
@@ -15,7 +20,7 @@ def read_eval(pdfdir):
         
     client = OpenAI(
       base_url="https://openrouter.ai/api/v1",
-      api_key=THAT_ONE,
+      api_key=secret,
     )
     
     # First API call with reasoning
