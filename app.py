@@ -23,7 +23,11 @@ def score_select(label):
 def extract_score(selection):
     return int(selection.split(" - ")[0])
 
-
+uploaded_files = st.file_uploader(
+    "Upload CV", accept_multiple_files="directory", type=["pdf", "png"]
+)
+for uploaded_file in uploaded_files:
+    st.image(uploaded_file)
 # ---------- TECHNICAL ----------
 st.header("🧠 Technical Skills")
 
