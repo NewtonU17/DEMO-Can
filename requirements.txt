@@ -3,3 +3,5 @@ numpy
 streamlit
 pandas
 joblib
+OpenAI
+pdfplumber
