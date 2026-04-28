@@ -24,7 +24,7 @@ def read_eval(pdfdir):
       messages=[
               {
                 "role": "user",
-                "content": "Summarize the following:" + full_text,
+                "content": "List keywords in the following:" + full_text,
               }
             ],
       
@@ -33,21 +33,6 @@ def read_eval(pdfdir):
     # Extract the assistant message with reasoning_details
     response = response.choices[0].message
     
-    # Preserve the assistant message with reasoning_details
-    messages = [
-      {"role": "user", "content": "How many r's are in the word 'strawberry'?"},
-      {
-        "role": "assistant",
-        "content": response.content,
-        "reasoning_details": response.reasoning_details  # Pass back unmodified
-      },
-      {"role": "user", "content": "Are you sure? Think carefully."}
-    ]
-    
-    response2 = client.chat.completions.create(
-      model="openai/gpt-oss-120b:free",
-      messages=messages,
-      extra_body={"reasoning": {"enabled": True}}
-    )
+  
     
     return(response)
