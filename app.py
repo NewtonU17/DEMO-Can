@@ -35,7 +35,7 @@ uploaded_files = st.file_uploader(
 if st.button("Scan CV"):
     Res = read_eval(uploaded_files)
     st.subheader("Key_word Identification")
-    st.writte(Res)
+    st.write(Res)
 # ---------- TECHNICAL ----------
 st.header("🧠 Technical Skills")
 
