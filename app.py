@@ -129,7 +129,7 @@ if st.button("Generate Evaluation"):
     technical_avg = sum(scores[k]["score"] for k in technical_keys) / len(technical_keys)
     behavioral_avg = sum(scores[k]["score"] for k in behavioral_keys) / len(behavioral_keys)
 
-    general_score = 0.6 * technical_avg + 0.4 * behavioral_avg
+    general_score = 0.5 * technical_avg + 0.4 * behavioral_avg + 0.1 * scores["English"]["score"]
 
     result = {
         "scores": scores,
